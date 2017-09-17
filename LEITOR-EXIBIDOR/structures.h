@@ -56,84 +56,87 @@ typedef uint32_t u4;
 
 /** 							ESTRUTURAS 										**/
 
-typedef struct{
-	u1 tag; 
-	u1 info[];
-}cp_info;
-
 /* Representa valores strings constantes, inclusive Unicode */
 typedef struct{
-	u1 tag;
 	u2 length;
 	u1 *bytes;
-}CONSTANT_Utf8_info;
+}ST_tpCONSTANT_Utf8_info;
 
 /* Representa uma constante de ponto flutuante de 4 bytes */
 typedef struct{
-	u1 tag;
 	u4 bytes;
-}CONSTANT_Float_info;
+}ST_tpCONSTANT_Float_info;
 
 /* Representa uma constante inteira de 4 bytes */
 typedef struct{
-	u1 tag;
 	u4 bytes;
-}CONSTANT_Integer_info;
+}ST_tpCONSTANT_Integer_info;
 
 /* Representa uma constante inteira de 8 bytes */
 typedef struct{
-	u1 tag;
 	u4 high_bytes;
 	u4 low_bytes;
-}CONSTANT_Long_info;
+}ST_tpCONSTANT_Long_info;
 
 /* Representa constante de ponto flutuante de 8 bytes */
 typedef struct{
-	u1 tag;
 	u4 high_bytes;
 	u4 low_bytes;
-}CONSTANT_Double_info;
+}ST_tpCONSTANT_Double_info;
 
 /* Representa uma Classe ou Interface */
 typedef struct{
-	u1 tag;
 	u4 name_index;
-}CONSTANT_Class_info;
+}ST_tpCONSTANT_Class_info;
 
 /* Representa objetos constantes do tipo String */
 typedef struct{
-	u1 tag;
 	u2 string_index;
 	//GLOBAL_HEAP StringObject;
-}CONSTANT_String_info;
+}ST_tpCONSTANT_String_info;
 
 /* Representa um field */
 typedef struct{
-	u1 tag;
 	u2 class_index;
 	u2 name_and_type_index;
-}CONSTANT_Fieldref_info;
+}ST_tpCONSTANT_Fieldref_info;
 
 /* Representa um método */
 typedef struct{
-	u1 tag;
 	u2 class_index;
 	u2 name_and_type_index;
-}CONSTANT_Methodref_info;
+}ST_tpCONSTANT_Methodref_info;
 
 /* Representa uma interface */
 typedef struct{
-	u1 tag;
 	u2 class_index;
 	u2 name_and_type_index;
-}CONSTANT_InterfaceMethodref_info;
+}ST_tpCONSTANT_InterfaceMethodref_info;
 
 /* Representa um field ou método sem indicar classe ou interface a que pertence */
 typedef struct{
-	u1 tag;
 	u2 name_index;
 	u2 descriptor_index;
-}CONSTANT_NameAndType_info;
+}ST_tpCONSTANT_NameAndType_info;
+
+typedef union {
+	ST_tpCONSTANT_Utf8_info Utf8;
+	ST_tpCONSTANT_Float_info Float;
+	ST_tpCONSTANT_Integer_info Integer;
+	ST_tpCONSTANT_Long_info Long;
+	ST_tpCONSTANT_Double_info Double;
+	ST_tpCONSTANT_Class_info Class;
+	ST_tpCONSTANT_String_info String;
+	ST_tpCONSTANT_Fieldref_info Fieldref;
+	ST_tpCONSTANT_Methodref_info Methodref;
+	ST_tpCONSTANT_InterfaceMethodref_info InterfaceMethodref;
+	ST_tpCONSTANT_NameAndType_info NameAndType;
+}ST_tpConstantPool;
+
+typedef struct{
+	u1 tag; 
+	ST_tpConstantPool info;
+}ST_tpCp_info;
 
 /** ******************************************************************************
 *								FLAGS DE ACESSO
@@ -155,7 +158,7 @@ typedef struct{
 typedef struct{
 	u2 constant_pool_index;
 	struct interface_list *next;
-}interface_list;
+}ST_tpInterface_list;
 
 /** ******************************************************************************
 *								TABELA DE ATRIBUTOS
@@ -165,7 +168,7 @@ typedef struct{
 	u4 attribute_length;
 	u1 *info;
 	struct attribute_info *next;
-}attribute_info;
+}ST_tpAttribute_info;
 
 /** ******************************************************************************
 *								TABELA DE CAMPOS (FIELD)
@@ -175,10 +178,10 @@ typedef struct{
 	u2 name_index;
 	u2 descriptor_index;
 	u2 attributes_count;
-	attribute_info attributes;
+	ST_tpAttribute_info attributes;
 	struct field_info *next;
 	//attribute_info attributes[attributes_count];
-}field_info; 
+}ST_tpField_info; 
 
 /** ******************************************************************************
 *								TABELA DE METODOS
@@ -188,10 +191,10 @@ typedef struct{
 	u2 name_index;
 	u2 descriptor_index;
 	u2 attributes_count;
-	attribute_info attributes;
+	ST_tpAttribute_info attributes;
 	struct method_info *next;
 	//attribute_info attributes[attributes_count];
-}method_info;  
+}ST_tpMethod_info;  
 
 /** ******************************************************************************
 *								TABELA DE EXCESSÃO
@@ -201,7 +204,7 @@ typedef struct{
 	u2 end_pc;
 	u2 handler_pc;
 	u2 catch_type;  
-}exception_table;
+}ST_tpException_table;
 
 /** ******************************************************************************
 *								ATRIBUTO CODE
@@ -215,11 +218,11 @@ typedef struct{
 	u1 *code;
 	//u1 code[code_length];
 	u2 exception_table_length;
-	exception_table exception_table;
+	ST_tpException_table exception_table;
 	u2 attributes_count;
-	attribute_info attribute_info;
+	ST_tpAttribute_info attribute_info;
 	//attribute_info attributes[attributes_count];
-}code_attribute; 
+}ST_tpCode_attribute; 
 
 /** ******************************************************************************
 *								ATRIBUTO EXCEPTIONS
@@ -229,8 +232,7 @@ typedef struct {
 	u4 attribute_length;
 	u2 number_of_exceptions;
 	//u2 exception_index_table[number_of_exceptions];
-}exceptions_attribute;
-
+}ST_tpExceptions_attribute;
 
 /** ******************************************************************************
 *								ESTRUTURA CLASSFILE
@@ -241,18 +243,18 @@ typedef struct{
 	u2 	minor_version_number;		// Versao minima do arquivo - Relacao com a versao do Java
 	u2	major_version_number;		// Versao manima do arquivo - Relacao com a versao do Java
 	u2	constant_pool_count;		// Numero de entradas na estrutura Constant Pool
-	cp_info	*constant_pool_table;	// Tabela Constant Pool
+	ST_tpCp_info	*constant_pool_table;	// Tabela Constant Pool
 	u2 	access_flags;				// Mascara de bits que especifica permissao de acesso da classe
 	u2	this_class;					// Representa a classe definida
 	u2	super_class;				// Representa a super classe direta da classe definida
 	u2	interfaces_count;			// Numero de entradas na estrutura Interfaces
 	u2	*interfaces_table;			// Tabela Interfaces que sao superinterfaces diretas da classe
 	u2	fields_count;				// Numero de variaveis de classe ou de instacias declaradas na classe presentes na estrutura Field
-	field_info 	*field_info_table;	// Tabela de Field
+	ST_tpField_info 	*field_info_table;	// Tabela de Field
 	u2	methods_count;				// Numero de estruturas method_info na tabela de Methods
-	method_info *method_info_table;	// Tabela de Metodos
+	ST_tpMethod_info *method_info_table;	// Tabela de Metodos
 	u2	attributes_count;			// Numero de estruturas attributes_info na tabela Atributos
-	attribute_info **attribute_info_table; // Tabela de Attributos
+	ST_tpAttribute_info **attribute_info_table; // Tabela de Attributos
 	//u2 code_index;
 	//u2 main_name_index;
 	//u2 start_method_index;
@@ -261,27 +263,6 @@ typedef struct{
 	//METHOD_HASH_TABLE method_hash_table;
 	//struct Class_file *right;
 	//struct Class_file *left;
-}classFile;
-
-/** ******************************************************************************
-*  Funcao: 
-*
-*  Descricao da funcao:
-*      Retorna 
-*
-* @return 
-*
-** *******************************************************************************/
-    
-/** ******************************************************************************
-*  Funcao: 
-*
-*  Descricao da funcao:
-*      
-*
-* @param fim    - True : transacao finalizada.
-*               - False : transacao ainda nao finalizada.
-*
-** *******************************************************************************/
+}ST_tpClassFile;
 
 #endif
