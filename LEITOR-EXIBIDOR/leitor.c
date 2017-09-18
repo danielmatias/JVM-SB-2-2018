@@ -16,10 +16,9 @@
  * @since 07/09/2017
  *
  @}********************************************************************************/
- 
- #include "structures.h"
- #include <stdio.h>
- #include <stdlib.h>
+
+
+ #include "leitor.h"
  
  u1 LE_lerU1(FILE *pArq){
  	u1 retorno;
@@ -30,16 +29,22 @@
 
 u2 LE_lerU2(FILE *pArq){
  	u2 retorno;
-	fread(&retorno, sizeof(u2), 1, pArq);
+    u1 segu = LE_lerU1(pArq);
+    u1 prim = LE_lerU1(pArq);
 	
+    retorno = ( segu << 8 | prim);
 	return retorno;
 }
 
  u4 LE_lerU4(FILE *pArq){
- 	u4 retorno;
-	fread(&retorno, sizeof(u4), 1, pArq);
-	
-	return retorno;
+     u4 retorno;
+     u1 quar = LE_lerU1(pArq);
+     u1 terc = LE_lerU1(pArq);
+     u1 segu = LE_lerU1(pArq);
+     u1 prim = LE_lerU1(pArq);
+     
+     retorno = (quar << 24 | terc << 16 | segu << 8 | prim);
+     return retorno;
 }
 
 ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count){
@@ -95,6 +100,7 @@ ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count){
 				break;
 		}
 	}
+    return constantPool;
 }
 
  ST_tpClassFile *LE_lerArquivo(char *nomeArquivo){
@@ -124,23 +130,16 @@ ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count){
 	arqPontoClass->this_class = LE_lerU2(pArq);
 	arqPontoClass->super_class = LE_lerU2(pArq);
 	arqPontoClass->interfaces_count = LE_lerU2(pArq);
-	arqPontoClass->interfaces_table = LE_lerInterfaces(pArq, arqPontoClass->interfaces_count);
+/*	arqPontoClass->interfaces_table = LE_lerInterfaces(pArq, arqPontoClass->interfaces_count);
 	arqPontoClass->fields_count = LE_lerU2(pArq);
 	arqPontoClass->field_info_table = LE_lerFields(pArq, arqPontoClass->fields_count);
 	arqPontoClass->methods_count = LE_lerU2(pArq);
 	arqPontoClass->method_info_table = LE_lerMethods(pArq, arqPontoClass->methods_count);
 	arqPontoClass->attributes_count = LE_lerU2(pArq);
-	//arqPontoClass->attribute_info_table = ;
+	//arqPontoClass->attribute_info_table = ; */
 	
 	
 	printf("0x%x", arqPontoClass->magic); // imprime o U4
-     
+     return arqPontoClass;
  }
- 
- int main(int argc, char const *argv[]){
- 	printf("Ola mundo\n");
- 	//char nome[50];
- 	
-	//scanf("%s", nome);
- 	LE_lerArquivo("File.class");
- }
+
