@@ -54,47 +54,48 @@ ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count){
 	
 	for(i = constantPool; i <  (constantPool+constant_pool_count-1); i++ ){
 		i->tag = LE_lerU1(pArq);
+        printf("tag: 0x%02x\n", i->tag);
 		switch(i->tag) {
 			case CONSTANT_Utf8:
-				i->info.Utf8.length = LE_lerU2(pArq);
-				i->	info.Utf8.bytes = malloc(i->info.Utf8.length*sizeof(u1));
-				fread(i->info.Utf8.bytes, 1, i->info.Utf8.length, pArq);
+				i->info->Utf8.length = LE_lerU2(pArq);
+				i->	info->Utf8.bytes = malloc(i->info->Utf8.length*sizeof(u1));
+				fread(i->info->Utf8.bytes, 1, i->info->Utf8.length, pArq);
 				break;
 			case CONSTANT_Float:
-				i->info.Float.bytes = LE_lerU4(pArq);
+				i->info->Float.bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Integer:
-				i->info.Integer.bytes = LE_lerU4(pArq);
+				i->info->Integer.bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Long:
-				i->info.Long.high_bytes = LE_lerU4(pArq);
-				i->info.Long.low_bytes = LE_lerU4(pArq);
+				i->info->Long.high_bytes = LE_lerU4(pArq);
+				i->info->Long.low_bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Double:
-				i->info.Double.high_bytes = LE_lerU4(pArq);
-				i->info.Double.high_bytes = LE_lerU4(pArq);
+				i->info->Double.high_bytes = LE_lerU4(pArq);
+				i->info->Double.high_bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Class:
-				i->info.Class.name_index = LE_lerU4(pArq);
+				i->info->Class.name_index = LE_lerU4(pArq);
 				break;
 			case CONSTANT_String:
-				i->info.String.string_index = LE_lerU2(pArq);
+				i->info->String.string_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_Fieldref:
-				i->info.Fieldref.class_index = LE_lerU2(pArq);
-				i->info.Fieldref.name_and_type_index = LE_lerU2(pArq);
+				i->info->Fieldref.class_index = LE_lerU2(pArq);
+				i->info->Fieldref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_Methodref:
-				i->info.Methodref.class_index = LE_lerU2(pArq);
-				i->info.Methodref.name_and_type_index = LE_lerU2(pArq);
+				i->info->Methodref.class_index = LE_lerU2(pArq);
+				i->info->Methodref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_InterfaceMethodref:
-				i->info.InterfaceMethodref.class_index = LE_lerU2(pArq);
-				i->info.InterfaceMethodref.name_and_type_index = LE_lerU2(pArq);
+				i->info->InterfaceMethodref.class_index = LE_lerU2(pArq);
+				i->info->InterfaceMethodref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_NameAndType:
-				i->info.NameAndType.name_index = LE_lerU2(pArq);
-				i->info.NameAndType.descriptor_index = LE_lerU2(pArq);
+				i->info->NameAndType.name_index = LE_lerU2(pArq);
+				i->info->NameAndType.descriptor_index = LE_lerU2(pArq);
 				break;
 			default:
 				break;

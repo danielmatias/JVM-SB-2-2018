@@ -135,7 +135,7 @@ typedef union {
 
 typedef struct{
 	u1 tag; 
-	ST_tpConstantPool info;// Verificar se aqui convem ser um ponteiro
+	ST_tpConstantPool *info;// Verificar se aqui convem ser um ponteiro
 }ST_tpCp_info;
 
 /** ******************************************************************************
