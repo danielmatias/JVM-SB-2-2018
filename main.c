@@ -13,6 +13,6 @@
 
 
 int main(int argc, const char * argv[]) {
-    EX_imprimirClassFile(LE_lerArquivo("/Users/danielmatias/Documents/JVM-SB-2-2017/LEITOR-EXIBIDOR/File.class"));
+    EX_imprimirClassFile(LE_carregarClasse("/Users/danielmatias/Desktop/JVM-SB-2-2018/LEITOR-EXIBIDOR/double_aritmetica.class"));
     return 0;
 }

@@ -50,53 +50,53 @@ u2 LE_lerU2(FILE *pArq){
 ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count){
 	
 	ST_tpCp_info *constantPool = (ST_tpCp_info *) malloc((constant_pool_count-1)*sizeof(ST_tpCp_info));
-	ST_tpCp_info *i = NULL;
+	int i;
 	
-	for(i = constantPool; i <  (constantPool+constant_pool_count-1); i++ ){
-		i->tag = LE_lerU1(pArq);
-		switch(i->tag) {
+	for(i = 0; i <  (constant_pool_count-1); i++ ){
+		constantPool[i].tag = LE_lerU1(pArq);
+		switch(constantPool[i].tag) {
 			case CONSTANT_Utf8:
-				i->info.Utf8.length = LE_lerU2(pArq);
-				i->info.Utf8.bytes = malloc(i->info.Utf8.length*sizeof(u1));
-//                for(u1 *j=i->info.Utf8.bytes;j<(i->info.Utf8.bytes+i->info.Utf8.length);j++)
-//                    *j = LE_lerU1(pArq);
-                fread(i->info.Utf8.bytes, 1, i->info.Utf8.length, pArq);
+				constantPool[i].info.Utf8.length = LE_lerU2(pArq);
+				constantPool[i].info.Utf8.bytes = malloc(constantPool[i].info.Utf8.length*sizeof(u1));
+                fread(constantPool[i].info.Utf8.bytes, 1, constantPool[i].info.Utf8.length, pArq);
 				break;
 			case CONSTANT_Float:
-				i->info.Float.bytes = LE_lerU4(pArq);
+				constantPool[i].info.Float.bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Integer:
-				i->info.Integer.bytes = LE_lerU4(pArq);
+				constantPool[i].info.Integer.bytes = LE_lerU4(pArq);
 				break;
 			case CONSTANT_Long:
-				i->info.Long.high_bytes = LE_lerU4(pArq);
-				i->info.Long.low_bytes = LE_lerU4(pArq);
-				break;
+				constantPool[i].info.Long.high_bytes = LE_lerU4(pArq);
+				constantPool[i].info.Long.low_bytes = LE_lerU4(pArq);
+                i++;
+                break;
 			case CONSTANT_Double:
-				i->info.Double.high_bytes = LE_lerU4(pArq);
-				i->info.Double.low_bytes = LE_lerU4(pArq);
-				break;
+				constantPool[i].info.Double.high_bytes = LE_lerU4(pArq);
+				constantPool[i].info.Double.low_bytes = LE_lerU4(pArq);
+                i++;
+                break;
 			case CONSTANT_Class:
-				i->info.Class.name_index = LE_lerU2(pArq);
+				constantPool[i].info.Class.name_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_String:
-				i->info.String.string_index = LE_lerU2(pArq);
+				constantPool[i].info.String.string_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_Fieldref:
-				i->info.Fieldref.class_index = LE_lerU2(pArq);
-				i->info.Fieldref.name_and_type_index = LE_lerU2(pArq);
+				constantPool[i].info.Fieldref.class_index = LE_lerU2(pArq);
+				constantPool[i].info.Fieldref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_Methodref:
-				i->info.Methodref.class_index = LE_lerU2(pArq);
-				i->info.Methodref.name_and_type_index = LE_lerU2(pArq);
+				constantPool[i].info.Methodref.class_index = LE_lerU2(pArq);
+				constantPool[i].info.Methodref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_InterfaceMethodref:
-				i->info.InterfaceMethodref.class_index = LE_lerU2(pArq);
-				i->info.InterfaceMethodref.name_and_type_index = LE_lerU2(pArq);
+				constantPool[i].info.InterfaceMethodref.class_index = LE_lerU2(pArq);
+				constantPool[i].info.InterfaceMethodref.name_and_type_index = LE_lerU2(pArq);
 				break;
 			case CONSTANT_NameAndType:
-				i->info.NameAndType.name_index = LE_lerU2(pArq);
-				i->info.NameAndType.descriptor_index = LE_lerU2(pArq);
+				constantPool[i].info.NameAndType.name_index = LE_lerU2(pArq);
+				constantPool[i].info.NameAndType.descriptor_index = LE_lerU2(pArq);
 				break;
 			default:
 				break;
@@ -164,7 +164,7 @@ ST_tpAttribute_info *LE_lerAttributes(FILE *pArq, u2 attributes_count) {
 }
 
 // Função que recebe o nome qualificado do arquivo .class e carrega o seu conteúdo, retornando o ponteiro para a estrutura classFile
- ST_tpClassFile *LE_lerArquivo(char *nomeArquivo){
+ ST_tpClassFile *LE_carregarClasse(char *nomeArquivo){
  	ST_tpClassFile *arqPontoClass = NULL; 				/* Cria ponteiro para estrutura classFile */
  	FILE * pArq = fopen(nomeArquivo,"rb");
  	

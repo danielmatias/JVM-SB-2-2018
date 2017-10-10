@@ -22,6 +22,6 @@ u4 LE_lerU4(FILE *pArq);
 
 ST_tpCp_info *LE_lerConstant_pool(FILE *pArq, u2 constant_pool_count);
 
-ST_tpClassFile *LE_lerArquivo(char *nomeArquivo);
+ST_tpClassFile *LE_carregarClasse(char *nomeArquivo);
 
 #endif /* leitor_h */
