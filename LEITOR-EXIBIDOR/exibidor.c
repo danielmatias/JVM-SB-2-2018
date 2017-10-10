@@ -51,9 +51,9 @@ void EX_imprimirClassFile(ST_tpClassFile *classFile){
     printf("Constant Pool Count: %d\n",classFile->constant_pool_count);
     printf("Access Flags: 0x%04x\n",classFile->access_flags);
     
-    printf("This Class: 0x%04x ",classFile->this_class);
+    printf("This Class: cp_info #%d ",classFile->this_class);
     imprimeUtf8_(classFile->constant_pool_table[classFile->constant_pool_table[classFile->this_class-1].info.Class.name_index-1].info.Utf8.bytes, classFile->constant_pool_table[classFile->constant_pool_table[classFile->this_class-1].info.Class.name_index-1].info.Utf8.length);
-    printf("Super Class: 0x%04x ",classFile->super_class);
+    printf("Super Class: cp_info #%d ",classFile->super_class);
     imprimeUtf8_(classFile->constant_pool_table[classFile->constant_pool_table[classFile->super_class-1].info.Class.name_index-1].info.Utf8.bytes, classFile->constant_pool_table[classFile->constant_pool_table[classFile->super_class-1].info.Class.name_index-1].info.Utf8.length);
     printf("Interfaces Count: %d\n",classFile->interfaces_count);
     printf("Fields Count: %d\n",classFile->fields_count);
